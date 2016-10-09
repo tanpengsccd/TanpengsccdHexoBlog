@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: tanpengsccd'Blog
+title: tanpengsccd'blog
 subtitle:
 description:
 author: tanpengsccd
-language:
+language: zh-Hans
 timezone:
 
 # URL
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: light
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
