@@ -19,7 +19,7 @@ https://mozillazg.com/2013/01/linux-vps-first-things-need-to-do.html
     	暂时使用最高权限
     3. sudo su
     	使用最高权限
-    4. su  用户名
+    4. sudo su -l 用户名
     	切换用户
     5. CTRL + C 按键
     	中断当前操作
@@ -75,10 +75,10 @@ https://mozillazg.com/2013/01/linux-vps-first-things-need-to-do.html
 >iptables一般系统自带
 1. 清楚默认规则  
 	`iptables -F`
-2. 允许ssh 22端口 进入和返回  
+2. 允许ssh 默认22端口 进入和返回  
 	```
-	iptables -A INPUT -p tcp --dport 22 -j ACCEPT  
-	iptables -A OUTPUT -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+	iptables -A INPUT -p tcp --dport 30501 -j ACCEPT  
+	iptables -A OUTPUT -p tcp --sport 30501 -m state --state ESTABLISHED -j ACCEPT
 	```
 3. 允许 53 端口，一般作为 DNS 服务使用
 	```
