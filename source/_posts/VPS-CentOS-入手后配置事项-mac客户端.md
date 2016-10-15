@@ -14,12 +14,12 @@ https://mozillazg.com/2013/01/linux-vps-first-things-need-to-do.html
 >常用命令
 
 	1. rm [-r] 文件/文件夹
-		移除文件夹
+		移除文件[夹]
     2. sudo
     	暂时使用最高权限
     3. sudo su
     	使用最高权限
-    4. sudo su -l 用户名
+    4. su [-l] 用户名
     	切换用户
     5. CTRL + C 按键
     	中断当前操作
@@ -60,11 +60,11 @@ https://mozillazg.com/2013/01/linux-vps-first-things-need-to-do.html
 
 8. 修改ssh的配置文件  
 	`vi /etc/ssh/sshd_config`
-	>每行前的 “#”表示这行配置被注释了，不生效
+	>每行前的 “#”表示这行配置被注释了，不生效,需要的配置去掉“#”才可生效
 
-	#PermitRootLogin yes 改为 PermitRootLogin no ，不允许root账户登录 建议设置为no更安全  
-	#PasswordAuthentication yes 改为 PasswordAuthentication no。允许密码登录，如果设置为NO，就只能通过ssh公私钥登录了
-  #Port 22 改为 Port 端口号数字(比如： Port 7564)。默认为22建议自己修改其他端口
+	PermitRootLogin yes 改为 PermitRootLogin no ，不允许root账户登录 建议设置为no更安全  
+	PasswordAuthentication yes 改为 PasswordAuthentication no。允许密码登录，如果设置为NO，就只能通过ssh公私钥登录了
+	Port 22 改为 Port 端口号数字(比如： Port 7564)。默认为22建议自己修改其他端口
 9. 重启ssh服务
 	`sudo service sshd restart`
 
@@ -72,25 +72,31 @@ https://mozillazg.com/2013/01/linux-vps-first-things-need-to-do.html
 
 ## iptables配置
 >关闭多余端口防止一些DDoS攻击  
->iptables一般系统自带
+>iptables一般系统已经集成
+
 1. 清楚默认规则  
 	`iptables -F`
 2. 允许ssh 默认22端口 进入和返回  
+
 	```
 	iptables -A INPUT -p tcp --dport 30501 -j ACCEPT  
 	iptables -A OUTPUT -p tcp --sport 30501 -m state --state ESTABLISHED -j ACCEPT
 	```
 3. 允许 53 端口，一般作为 DNS 服务使用
+
 	```
 	iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
 	iptables -A INPUT -p udp --sport 53 -j ACCEPT
 	```
 4. 允许本机访问本机
+
+
 	```
 	iptables -A INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
 	iptables -A OUTPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
 	```
 5. 允许所有 IP 访问 80 和 443 端口，一般作为 http 和 https 用途  
+
 	```
 	iptables -A INPUT -p tcp -s 0/0 --dport 80 -j ACCEPT
 	iptables -A OUTPUT -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
@@ -98,21 +104,22 @@ https://mozillazg.com/2013/01/linux-vps-first-things-need-to-do.html
 	iptables -A OUTPUT -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
 	```
 6. 保存配置  
+
 	`iptables-save > /etc/sysconfig/iptables`
-7. 重新加载 iptables
+7. 重新加载 iptables  
 	`iptables -L`
 	> 具体使用iptables 详解 看一看这里http://blog.csdn.net/reyleon/article/details/12976341
 
 ## 防扫描（fail2ban）
 
-1. 安装EPLE 源
+1. 安装EPLE源
 `yum install epel-release.noarch`
 2. 安装 fail2ban
 `yum install fail2ban.noarch` 安装时会自动加入自启
 3. `cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local`
 
 通过查看 /var/log/fail2ban.log 文件即可知道有哪些精力过剩的家伙在整天扫描你的 SSH 了。
->fail2ban github主页 https://github.com/fail2ban/fail2ban
+>fail2ban github主页 https://github.com/fail2ban/fail2ban  
 >了解更多  http://www.voidcn.com/blog/cmdschool/article/p-5575852.html
 
 # 配置SS(R)服务器端
