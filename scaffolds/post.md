@@ -2,10 +2,10 @@
 title: {{ title }}
 date: {{ date }}
 update: 
-categorys: 
+categories:
+- 
 tags: 
--  
-
+- 
 archives: 
 comments: true
 description: 
